@@ -22,6 +22,7 @@ keys.addEventListener('click', e => {
             } else {
                 display.textContent = displayedNum + keyContent;
             }
+            calculator.dataset.previousKeyType = 'number';
         }
 
         if (action === 'add' ||
@@ -29,18 +30,22 @@ keys.addEventListener('click', e => {
             action === 'multiply' ||
             action === 'divide'
         ) {
-            console.log('operator key!');
             key.classList.add('is-depressed');
             calculator.dataset.previousKeyType = 'operator';
             calculator.dataset.firstValue = displayedNum;
             calculator.dataset.operator = action;
         }
         if (action === 'decimal'){
-            console.log('decimal key!');
-            display.textContent = displayedNum + '.';
+            if(!displayedNum.includes('.')){
+                display.textContent = displayedNum + '.';
+            } else if (previousKeyType === 'operator') {
+                display.textContent = '0.';
+            }
+            calculator.dataset.previousKeyType = 'decimal';
         }
         if (action === 'clear'){
             display.textContent = '0';
+            calculator.dataset.previousKeyType = 'clear';
         }
         if (action === 'calculate'){
             const firstValue = calculator.dataset.firstValue;
@@ -48,6 +53,7 @@ keys.addEventListener('click', e => {
             const secondValue = displayedNum;
 
             display.textContent = calculate(firstValue, operator, secondValue);
+            calculator.dataset.previousKeyType = 'calculate';
         }
 
         function calculate (n1, operator, n2) {
